@@ -1,0 +1,16 @@
+#enviroments
+myenv/
+.env
+
+#database
+backend/db.sqlite3
+
+
+# Ignore Node.js dependencies
+frontend/node_modules/
+
+# Ignore Django cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
