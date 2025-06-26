@@ -19,7 +19,8 @@ const UserReg = () => {
     setMessage("");
     try{
       //code
-      const response=await axios.post("/api/auth/register",formData);
+      const response=await axios.post("http://127.0.0.1:8000/api/auth/reg/",formData);
+      console.log(response)
       if(response.status==201||response.status==200){
         setMessage("Registration successful! You can now log in.");
           //redirect to profile page i will implement after i implement login functionlaity

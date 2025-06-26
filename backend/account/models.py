@@ -17,16 +17,21 @@ class Problem(models.Model):
     ]
     problem_statement = models.TextField()
     problem_category=models.CharField(max_length=50,choices=CATEGORY_CHOICES)
-    answer_code=models.TextField()
     difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
+    examples = models.JSONField(default=list, blank=True) 
     def __str__(self):
         return f"{self.problem_statement[:50]}..."  
     
 
 class UserExtension(models.Model):
+    ROLE_CHOICES = [
+        ('user', 'User'),
+        ('admin', 'Admin'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='extension')
     college_name = models.CharField(max_length=255, blank=True)
     solved_questions = models.ManyToManyField(Problem, blank=True, related_name='solved_by')
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
 
     def __str__(self):
         return f"{self.user.username}'s extension"

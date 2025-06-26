@@ -1,0 +1,37 @@
+/* src/calendar-overrides.css */
+.react-calendar {
+  background: transparent !important;
+  border: none !important;
+  color: #fff !important;
+}
+.react-calendar__tile {
+  background: transparent !important;
+  color: #fff !important;
+}
+.react-calendar__navigation button {
+  background: transparent !important;
+  color: #fff !important;
+}
+.react-calendar__tile--active {
+  background: #22c55e !important; /* Tailwind's green-500 */
+  color: #fff !important;
+  border-radius: 9999px !important;
+}
+
+.react-calendar {
+  border: 1px solid #d3d3d3; /* light grey border */
+  border-radius: 8px;
+}
+
+/* Current day: purple-pink gradient, white text, rounded */
+.react-calendar__tile--now {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  color: #fff !important;
+  border-radius: 50%;
+}
+
+/* On hover, a slightly different gradient */
+.react-calendar__tile--now:hover {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  color: #fff !important;
+}
