@@ -17,3 +17,5 @@ class ProblemViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Problem
         fields = ['problem_statement', 'problem_category', 'difficulty']
+
+

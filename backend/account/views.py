@@ -89,10 +89,23 @@ class ProblemsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        # All problems
         problems = Problem.objects.all()
         serializer = ProblemSerializer(problems, many=True)
-        return Response(serializer.data)
-    
+
+        # Solved problems for this user
+        try:
+            user_extension = request.user.extension
+            solved_problems = user_extension.solved_questions.all()
+            solved_ids = [problem.id for problem in solved_problems]
+        except UserExtension.DoesNotExist:
+            # If user extension not found, fallback to empty list
+            solved_ids = []
+
+        return Response({
+            "problems": serializer.data,
+            "solved_problem_ids": solved_ids
+        })
 
 
 class ProblemDetailView(APIView):
@@ -100,8 +113,24 @@ class ProblemDetailView(APIView):
 
     def get(self, request, p_id):
         problem = get_object_or_404(Problem, id=p_id)
+
         serializer = ProblemSerializer(problem)
-        return Response(serializer.data)
+
+        # Default solved = False
+        solved = False
+        try:
+            user_extension = request.user.extension
+            if user_extension.solved_questions.filter(id=problem.id).exists():
+                solved = True
+        except UserExtension.DoesNotExist:
+            solved = False
+
+        # Convert to dict and add solved
+        data = serializer.data
+        data['solved'] = solved
+
+        return Response(data)
+
 
 
 class LogoutAPIView(APIView):

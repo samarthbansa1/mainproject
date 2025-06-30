@@ -7,6 +7,9 @@ import ProfilePage from './pages/ProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProblemPage from './pages/ProblemPage';
 import ProblemScreen from './pages/ProblemScreen';
+import Dashboard from './pages/Dashboard';
+import DashboardProblemDetail from './pages/DashboardProblemDetail';
+import DashboardProblemCreate from './pages/DashboardProblemCreate';
 const App = () => {
   return (
    <BrowserRouter>
@@ -30,9 +33,18 @@ const App = () => {
 
 
       {/* this is also a secured route change the url after design  */}
-      <Route path='/problem' element={<ProblemScreen/>}/>
+      <Route path='/problem/:p_id' element={<ProblemScreen />} />
 
 
+
+      {/* this is also a protected route  */}
+      <Route path='/dashboard' element={<Dashboard/>}/>
+
+      {/* this is  also a protected route */}
+      <Route path="/dashboard/:p_id" element={<DashboardProblemDetail/>}/>
+
+        {/* this is also a protected route  */}
+        <Route path="/dashboard/create" element={<DashboardProblemCreate/>}/>
 
 
 
