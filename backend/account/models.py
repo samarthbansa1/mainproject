@@ -30,21 +30,15 @@ class UserExtension(models.Model):
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='extension')
     college_name = models.CharField(max_length=255, blank=True)
+    # cant find the error where this filed i getting all the questions default 
     solved_questions = models.ManyToManyField(Problem, blank=True, related_name='solved_by')
+    solved_problems = models.ManyToManyField(Problem, blank=True, related_name='solved_by_single')
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
 
     def __str__(self):
         return f"{self.user.username}'s extension"
     
 
-class Submission(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='submissions')
-    problem = models.ForeignKey('Problem', on_delete=models.CASCADE, related_name='submissions')
-    verdict = models.BooleanField()  # True for 'yes' (correct), False for 'no' (incorrect)
-    submitted_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Submission by {self.user.username} for {self.problem.id} - {'Accepted' if self.verdict else 'Rejected'}"
     
 class TestCase(models.Model):
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='test_cases')

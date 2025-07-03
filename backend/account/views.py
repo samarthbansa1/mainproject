@@ -96,7 +96,7 @@ class ProblemsView(APIView):
         # Solved problems for this user
         try:
             user_extension = request.user.extension
-            solved_problems = user_extension.solved_questions.all()
+            solved_problems = user_extension.solved_problems.all()
             solved_ids = [problem.id for problem in solved_problems]
         except UserExtension.DoesNotExist:
             # If user extension not found, fallback to empty list
@@ -128,6 +128,7 @@ class ProblemDetailView(APIView):
         # Convert to dict and add solved
         data = serializer.data
         data['solved'] = solved
+        data['examples'] = problem.examples  
 
         return Response(data)
 

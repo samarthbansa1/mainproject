@@ -3,17 +3,18 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Compile_Submission
+from .models import Compile_Submission,SubmitSubmission
 import uuid
 import subprocess
 from pathlib import Path
 from django.conf import settings
-from .serializers import SubmissionSerializer
+from .serializers import SubmissionSerializer,TestCaseSerializer,SubmitSubmissionSerializer
+from account.models import Problem, TestCase,UserExtension
 GPP_PATH = r"C:\MinGW\bin\g++.exe"
 
 
 
-class SubmitView(APIView):
+class CompileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -36,6 +37,86 @@ class SubmitView(APIView):
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class ProblemTestCaseListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, p_id):
+        try:
+            problem = Problem.objects.get(id=p_id)
+        except Problem.DoesNotExist:
+            return Response({'error': 'Problem not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        testcases = TestCase.objects.filter(problem=problem)
+        serializer = TestCaseSerializer(testcases, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class SubmitView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        language = request.data.get('language')
+        code = request.data.get('code')
+        problem_id = request.data.get('problem_id')
+
+        if not all([language, code, problem_id]):
+            return Response({'error': 'Missing fields.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            problem = Problem.objects.get(id=problem_id)
+        except Problem.DoesNotExist:
+            return Response({'error': 'Problem not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        test_cases = TestCase.objects.filter(problem=problem)
+        passed = 0
+        total = test_cases.count()
+        details = []
+
+        for tc in test_cases:
+            input_data = tc.input.replace('\r\n', '\n').replace('\r', '\n')
+            output = run_code(language, code, input_data)
+
+            # Normalize line endings
+            normalized_output = output.strip().replace('\r\n', '\n').replace('\r', '\n')
+            normalized_expected = tc.correct_output.strip().replace('\r\n', '\n').replace('\r', '\n')
+
+            if normalized_output == normalized_expected:
+                passed += 1
+                details.append({
+                    'input': tc.input,
+                    'expected': tc.correct_output,
+                    'output': output,
+                    'result': 'Passed'
+                })
+            else:
+                details.append({
+                    'input': tc.input,
+                    'expected': tc.correct_output,
+                    'output': output,
+                    'result': 'Failed'
+                })
+
+        submission = SubmitSubmission.objects.create(
+            user=request.user,
+            problem=problem,
+            language=language,
+            code=code,
+            passed_count=passed,
+            total_count=total,
+            result=f"Passed {passed}/{total} test cases"
+        )
+
+        # ✅ Add problem to solved_problems if all test cases passed and not already solved
+        if passed == total and total > 0:
+            user_extension, created = UserExtension.objects.get_or_create(user=request.user)
+            if not user_extension.solved_problems.filter(id=problem.id).exists():
+                user_extension.solved_problems.add(problem)
+
+        serializer = SubmitSubmissionSerializer(submission)
+        return Response({
+            'result': f"Passed {passed}/{total} test cases",
+            'details': details,
+            'submission': serializer.data
+        }, status=status.HTTP_200_OK)
 
 
 
