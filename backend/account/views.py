@@ -11,7 +11,9 @@ from .models import Problem
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import RefreshToken,TokenError
 
-from .serializers import RegisterSerializer, LoginSerializer,ProblemSerializer
+from .serializers import RegisterSerializer, LoginSerializer,ProblemSerializer,LeaderboardUserSerializer
+from django.db.models import Count
+
 
 # Create your views here.
 
@@ -67,22 +69,28 @@ class LoginView(GenericAPIView):
         }, status=status.HTTP_200_OK)
 
 
-
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         user = request.user
         try:
-            college_name = user.extension.college_name  # Assuming OneToOne field 'extension'
+            user_extension = user.extension  # Assuming OneToOne field 'extension'
+            college_name = user_extension.college_name
+            # Get solved problem IDs
+            solved_problems = user_extension.solved_problems.all()
+            solved_problem_ids = [problem.id for problem in solved_problems]
         except Exception:
             college_name = None
+            solved_problem_ids = []
 
         return Response({
             "validated": True,
             "username": user.username,
-            "college_name": college_name
+            "college_name": college_name,
+            "solved_problem_ids": solved_problem_ids
         }, status=status.HTTP_200_OK)
+
 
 
 class ProblemsView(APIView):
@@ -143,3 +151,16 @@ class LogoutAPIView(APIView):
             return Response({"detail": "Logout successful."}, status=status.HTTP_205_RESET_CONTENT)
         except (KeyError, TokenError):
             return Response({"detail": "Invalid refresh token."}, status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+class LeaderboardView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        users = User.objects.annotate(
+            solved_questions_count=Count('extension__solved_questions')
+        ).order_by('-solved_questions_count')
+
+        serializer = LeaderboardUserSerializer(users, many=True)
+        return Response(serializer.data)

@@ -10,6 +10,7 @@ import ProblemScreen from './pages/ProblemScreen';
 import Dashboard from './pages/Dashboard';
 import DashboardProblemDetail from './pages/DashboardProblemDetail';
 import DashboardProblemCreate from './pages/DashboardProblemCreate';
+import Leaderboard from './pages/Leaderboard';
 const App = () => {
   return (
    <BrowserRouter>
@@ -45,6 +46,8 @@ const App = () => {
 
         {/* this is also a protected route  */}
         <Route path="/dashboard/create" element={<DashboardProblemCreate/>}/>
+
+        <Route path='/leaderboard' element={<Leaderboard/>}/>
 
 
 

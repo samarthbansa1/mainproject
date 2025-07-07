@@ -70,14 +70,19 @@ const ProblemPage = () => {
               {solvedProblems.length === 0 && (
                 <div className="text-gray-400 text-center">No solved problems yet.</div>
               )}
-              {solvedProblems.map((problem) => (
-                <div key={problem.id} className="w-full h-[20%] flex">
-                  <a className="flex items-center gap-2">
-                    <SiTicktick size={25} color="#32CD32" />
-                    <h2 className="text-white">{problem.problem_statement}</h2>
-                  </a>
-                </div>
-              ))}
+              <div className="w-full flex flex-col gap-2">
+  {solvedProblems.map((problem) => (
+    <div key={problem.id} className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2">
+      <SiTicktick size={20} color="#32CD32" />
+      <h2 className="text-white text-base">
+        {problem.problem_statement
+          .split(' ')
+          .slice(0, 6)
+          .join(' ') + (problem.problem_statement.split(' ').length > 5 ? '...' : '')}
+      </h2>
+    </div>
+  ))}
+</div>
             </div>
           </div>
         </div>

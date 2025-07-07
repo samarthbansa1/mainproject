@@ -10,7 +10,8 @@ from pathlib import Path
 from django.conf import settings
 from .serializers import SubmissionSerializer,TestCaseSerializer,SubmitSubmissionSerializer
 from account.models import Problem, TestCase,UserExtension
-GPP_PATH = r"C:\MinGW\bin\g++.exe"
+GPP_PATH = "g++"
+
 
 
 

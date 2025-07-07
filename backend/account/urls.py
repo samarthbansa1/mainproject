@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView,LoginView,ProfileView,ProblemsView,ProblemDetailView,LogoutAPIView
+from .views import RegisterView,LoginView,ProfileView,ProblemsView,ProblemDetailView,LogoutAPIView,LeaderboardView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
@@ -18,6 +18,8 @@ urlpatterns = [
     path('api/auth/problems/<int:p_id>/', ProblemDetailView.as_view(), name='problem-detail'),
     #logout url
     path('api/auth/logout/', LogoutAPIView.as_view(), name='logout'),
+    #leaderboard
+    path('api/auth/leaderboard/', LeaderboardView.as_view(), name='leaderboard'),
 
 
 
