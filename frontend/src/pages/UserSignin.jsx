@@ -37,8 +37,11 @@ const UserSignin = () => {
     } catch (error) {
       //handle error
       if (error.response) {
+        console.log(error)
         setMessage(error.response.data.error || "Login failed.");
       } else {
+        console.log(error)
+
         setMessage("An error occurred. Please try again.");
       }
     }
