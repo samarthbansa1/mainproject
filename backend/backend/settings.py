@@ -69,8 +69,12 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://mainproject-six.vercel.app",
+    "http://13.223.56.111:8000",
     # Add other origins if needed
 ]
+CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOW_METHODS = [
     "GET",
     "POST",
