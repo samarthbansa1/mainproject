@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://13.223.56.111:8000",
+  baseURL: "https://algojudgemyproject.duckdns.org",
 });
 
 // Request interceptor: attach access token
@@ -30,7 +30,7 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem("refresh_token");
         // Try to refresh token
         const response = await axios.post(
-          "http://13.223.56.111:8000/api/auth/refresh/",
+          "https://algojudgemyproject.duckdns.org/api/auth/refresh/",
           { refresh: refreshToken }
         );
         const { access, refresh } = response.data;

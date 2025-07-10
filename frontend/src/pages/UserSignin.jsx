@@ -18,7 +18,7 @@ const UserSignin = () => {
     try {
       //code
       const response = await axios.post(
-        "http://13.223.56.111:8000/api/auth/login/",
+        "https://algojudgemyproject.duckdns.org/api/auth/login/",
         formData
       );
       console.log(response);

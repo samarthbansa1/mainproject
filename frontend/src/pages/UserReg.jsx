@@ -19,7 +19,7 @@ const UserReg = () => {
     setMessage("");
     try{
       //code
-      const response=await axios.post("http://13.223.56.111:8000/api/auth/reg/",formData);
+      const response=await axios.post("https://algojudgemyproject.duckdns.org/api/auth/reg/",formData);
       console.log(response)
       if(response.status==201||response.status==200){
         setMessage("Registration successful! You can now log in.");
