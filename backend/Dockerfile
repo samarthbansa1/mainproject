@@ -1,14 +1,14 @@
-#python base image
 FROM python:3.11-slim
 
-#work dir
 WORKDIR /app
 
-# Install system dependencies (add compilers for code execution)
+# Install system dependencies including Docker client
 RUN apt-get update && \
-    apt-get install -y gcc g++ openjdk-17-jdk && \
-    rm -rf /var/lib/apt/lists/*
-
+    apt-get install -y gcc g++ openjdk-17-jdk curl && \
+    curl -fsSL https://get.docker.com -o get-docker.sh && \
+    sh get-docker.sh && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm get-docker.sh
 
 # Install Python dependencies
 COPY requirements.txt .

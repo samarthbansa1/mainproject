@@ -71,9 +71,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://mainproject-six.vercel.app",
     "http://13.223.56.111:8000",
+    "https://samhk.xyz",
+    "https://www.samhk.xyz",
+    "https://algojudgemyproject.duckdns.org", 
     # Add other origins if needed
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+SECURE_SSL_REDIRECT = False
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 CORS_ALLOW_METHODS = [
     "GET",
@@ -170,3 +178,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://samhk.xyz",
+    "https://www.samhk.xyz",
+    "https://mainproject-six.vercel.app",
+    "https://algojudgemyproject.duckdns.org",
+]

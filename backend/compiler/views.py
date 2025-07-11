@@ -245,16 +245,87 @@ class SubmitView(APIView):
 
 
 
-#compiles code on temporary container
+#compiles code on temporary container local machine
+# def run_code(language, code, input_data):
+#     """
+#     Simplest approach - pass everything through stdin
+#     """
+#     try:
+#         client = docker.from_env()
+        
+#         if language == "cpp":
+#             # For C++, we need to create the file first
+#             full_cmd = f"""
+# cat > /tmp/code.cpp << 'EOF'
+# {code}
+# EOF
+# cat > /tmp/input.txt << 'EOF'
+# {input_data}
+# EOF
+# cd /tmp && g++ code.cpp -o a.out && ./a.out < input.txt
+# """
+#         elif language == "java":
+#             full_cmd = f"""
+# cat > /tmp/Main.java << 'EOF'
+# {code}
+# EOF
+# cat > /tmp/input.txt << 'EOF'
+# {input_data}
+# EOF
+# cd /tmp && javac Main.java && java Main < input.txt
+# """
+#         elif language == "python":
+#             full_cmd = f"""
+# cat > /tmp/code.py << 'EOF'
+# {code}
+# EOF
+# cat > /tmp/input.txt << 'EOF'
+# {input_data}
+# EOF
+# cd /tmp && python code.py < input.txt
+# """
+#         else:
+#             return "Unsupported language."
+        
+#         try:
+#             result = client.containers.run(
+#                 image="runner_docker",
+#                 command=["sh", "-c", full_cmd],
+#                 network_disabled=True,
+#                 mem_limit="256m",
+#                 cpu_period=100000,
+#                 cpu_quota=50000,
+#                 remove=True,
+#                 stderr=True,
+#                 stdout=True
+#             )
+            
+#             return result.decode('utf-8') if result else "No output produced."
+            
+#         except docker.errors.ContainerError as e:
+#             error_output = e.stderr.decode('utf-8') if e.stderr else "Unknown error"
+#             return f"Error:\n{error_output}"
+            
+#     except docker.errors.ImageNotFound:
+#         return "Error: Docker image 'runner_docker' not found. Please build the image first."
+#     except Exception as e:
+#         return f"Internal Error: {str(e)}"
+
+
+#compiles code on temporary container via image on aws ecr 
+import docker
+
 def run_code(language, code, input_data):
     """
-    Simplest approach - pass everything through stdin
+    Runs user code in a temporary Docker container using a runner image hosted on AWS ECR.
+    Supports C++, Java, and Python.
     """
     try:
         client = docker.from_env()
-        
+        # Use your actual ECR image path
+        runner_image = "688567278182.dkr.ecr.us-east-1.amazonaws.com/runner_docker:latest"
+
         if language == "cpp":
-            # For C++, we need to create the file first
             full_cmd = f"""
 cat > /tmp/code.cpp << 'EOF'
 {code}
@@ -286,10 +357,10 @@ cd /tmp && python code.py < input.txt
 """
         else:
             return "Unsupported language."
-        
+
         try:
             result = client.containers.run(
-                image="runner_docker",
+                image=runner_image,
                 command=["sh", "-c", full_cmd],
                 network_disabled=True,
                 mem_limit="256m",
@@ -299,14 +370,15 @@ cd /tmp && python code.py < input.txt
                 stderr=True,
                 stdout=True
             )
-            
             return result.decode('utf-8') if result else "No output produced."
-            
+
         except docker.errors.ContainerError as e:
             error_output = e.stderr.decode('utf-8') if e.stderr else "Unknown error"
             return f"Error:\n{error_output}"
-            
-    except docker.errors.ImageNotFound:
-        return "Error: Docker image 'runner_docker' not found. Please build the image first."
+        except docker.errors.ImageNotFound:
+            return f"Error: Docker image '{runner_image}' not found. Please ensure the image is available in ECR."
+        except Exception as e:
+            return f"Internal Error: {str(e)}"
+
     except Exception as e:
         return f"Internal Error: {str(e)}"
