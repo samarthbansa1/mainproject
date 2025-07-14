@@ -20,6 +20,8 @@ const ProblemPage = () => {
   const [solvedProblemIds, setSolvedProblemIds] = useState([]);
   const [activeCategory, setActiveCategory] = useState("all");
   const [error, setError] = useState("");
+  const [calendarDate, setCalendarDate] = useState(new Date());
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,7 +60,7 @@ const ProblemPage = () => {
       <div className="h-[85vh] flex border-t border-t-gray-300">
         <div className="h-full w-[30%] border-r border-r-gray-300 ">
           <div className="profile_pic w-full h-[50%] flex flex-col justify-center items-center overflow-auto">
-            <CalendarComp />
+            <CalendarComp value={calendarDate} onChange={setCalendarDate} />
           </div>
           <div className="past_submission border-t border-t-gray-300 w-full h-[50%] ">
             <div className="w-full h-[20%] flex justify-center items-center">

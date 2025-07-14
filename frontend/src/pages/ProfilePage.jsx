@@ -16,6 +16,8 @@ const ProfilePage = () => {
   const [error, setError] = useState("");
   const [allProblems, setAllProblems] = useState([]);
   const [solvedProblems, setSolvedProblems] = useState([]);
+  const [calendarDate, setCalendarDate] = useState(new Date());
+
 
   useEffect(() => {
     const fetchProfileAndProblems = async () => {
@@ -90,10 +92,10 @@ const ProfilePage = () => {
         </div>
         <div className="h-full w-[70%] overflow-auto p-2 flex flex-wrap">
           <div className="h-[50%] w-1/2 border-1 rounded-md border-amber-50">
-            <QuestionChart />
+            <QuestionChart difficultyCategory={profile?.difficulty_category} />
           </div>
           <div className="h-[50%] w-1/2 border-1 rounded-md border-amber-50 overflow-auto">
-            <CalendarComp />
+            <CalendarComp value={calendarDate} onChange={setCalendarDate} />
           </div>
           <div className="h-[50%] w-full ">
             <StreakComp />

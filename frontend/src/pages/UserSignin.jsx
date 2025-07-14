@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 const UserSignin = () => {
   const navigate = useNavigate();
+
+  // State for password visibility
+  const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -18,10 +24,11 @@ const UserSignin = () => {
     try {
       //code
       const response = await axios.post(
-        "https://algojudgemyproject.duckdns.org/api/auth/login/",
+        // "https://algojudgemyproject.duckdns.org/api/auth/login/",//actual domain when hosting
+        "http://127.0.0.1:8000/api/auth/login/",//remove when production
         formData
       );
-      console.log(response);
+      // console.log(response);
       if (response.status == 200) {
         // console.log("Token:", response.data.token);
         localStorage.setItem("access_token", response.data.tokens.access);
@@ -30,18 +37,17 @@ const UserSignin = () => {
         setMessage("login succesfull");
         //store token i will do it after completing and designing the proile page
         //redirect to the secured page /profile etc
-          navigate("/profile");
+        navigate("/profile");
       } else {
         setMessage(response.data.error || "Login failed.");
       }
     } catch (error) {
       //handle error
       if (error.response) {
-        console.log(error)
+        // console.log(error)
         setMessage(error.response.data.error || "Login failed.");
       } else {
-        console.log(error)
-
+        // console.log(error)
         setMessage("An error occurred. Please try again.");
       }
     }
@@ -82,14 +88,24 @@ const UserSignin = () => {
         >
           PASSWORD:
         </label>
-        <input
-          id="password"
-          value={formData.password}
-          onChange={handleChange}
-          name="password"
-          type="password"
-          className="w-full mb-6 p-3 rounded-md bg-gray-200/90 focus:outline-none"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            value={formData.password}
+            onChange={handleChange}
+            name="password"
+            type={showPassword ? "text" : "password"}
+            className="w-full mb-6 p-3 rounded-md bg-gray-200/90 focus:outline-none pr-10"
+          />
+          <button
+            type="button"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            onClick={() => setShowPassword((prev) => !prev)}
+            tabIndex={-1}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
 
         <div className="flex justify-center">
           <button

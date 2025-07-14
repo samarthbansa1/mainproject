@@ -8,10 +8,7 @@ const Navbar = () => {
             <img className="w-10" src="./Logo.png"/>
             <h1 className="text-white font-[1000] text-2xl font-instrument "><a href='/'>AlgoJudge</a></h1>
         </div>
-        <div className="centerdiv h-full  text-white font-light flex items-center justify-between gap-5 px-5">
-            <h2>Features</h2>
-            <h2>About</h2>
-        </div>
+        
         <div className="signin text-white h-full  gap-3 px-4  flex items-center justify-between">
             <h2 className="font-light"><a href="/signup">New Account</a></h2>
             <div className="btnDiv bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 p-[2px] rounded-lg">

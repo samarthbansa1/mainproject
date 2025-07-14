@@ -43,7 +43,7 @@ const Leaderboard = () => {
               {topUser ? (topUser.college_name || "No College") : ""}
             </h1>
             <h2 className="font-bold text-lg">
-              {topUser ? `Solved: ${topUser.solved_questions_count}` : ""}
+              {topUser ? `Solved: ${topUser.solved_problems_count}` : ""}
             </h2>
           </div>
         </div>
@@ -58,7 +58,7 @@ const Leaderboard = () => {
                 rank={idx + 2} // +2 because top user is 1
                 username={user.username}
                 college={user.college_name}
-                solved={user.solved_questions_count}
+                solved={user.solved_problems_count}
               />
             ))
           )}

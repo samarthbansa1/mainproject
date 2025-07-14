@@ -1,46 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const UserReg = () => {
-  const [formData,setFormData]=useState({
-    username:"",
-    password:"",
-    college_name:"",
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const access = localStorage.getItem("access_token");
+    const refresh = localStorage.getItem("refresh_token");
+    if (access || refresh) {
+      navigate("/profile");
+    }
+  }, [navigate]);
+
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    college_name: "",
   });
-  const [message,setMessage]=useState("");
-  //handle change
-  const handleChange=(e)=>{
-    setFormData({...formData,[e.target.name]:e.target.value});
+  const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  // handle change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  //handle form submission
-  const handleSubmit= async(e)=>{
+
+  // handle form submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-    try{
-      //code
-      const response=await axios.post("https://algojudgemyproject.duckdns.org/api/auth/reg/",formData);
-      console.log(response)
-      if(response.status==201||response.status==200){
+    setIsSuccess(false);
+    try {
+      const response = await axios.post(
+        "https://algojudgemyproject.duckdns.org/api/auth/reg/", //uncomment when in production
+        // "http://127.0.0.1:8000/api/auth/reg/", //remove when in production
+        formData
+      );
+      if (response.status === 201 || response.status === 200) {
         setMessage("Registration successful! You can now log in.");
-          //redirect to profile page i will implement after i implement login functionlaity
-      }
-      else{
+        setIsSuccess(true);
+        // Optionally redirect to login page here
+      } else {
         setMessage(response.data.error || "Registration failed.");
-
+        setIsSuccess(false);
       }
-    }catch(error){
-      //error handle
+    } catch (error) {
       if (error.response) {
         setMessage(error.response.data.error || "Registration failed.");
       } else {
         setMessage("An error occurred. Please try again.");
       }
-
+      setIsSuccess(false);
     }
-  }
-
-
+  };
 
   return (
     <>
@@ -48,30 +64,84 @@ const UserReg = () => {
       <div className=" w-[0rem] absolute -z-10 top-[50%] left-[40%] shadow-[0_0_900px_80px_#951ec0]"></div>
       <div className=" w-[0rem] absolute -z-9 top-[50%] left-[60%] shadow-[0_0_900px_100px_#37A6EB]"></div>
       <div className=" w-[0rem] absolute -z-8 top-[80%] left-[50%] shadow-[0_0_900px_80px_#37DCEB]"></div>
-      
-      
-  <form onSubmit={handleSubmit}  className="w-[400px] p-8 mx-auto rounded-2xl border-2 border-white shadow-2xl bg-white/10 backdrop-blur-md relative">
-    <h2 className="text-3xl font-bold text-white text-center mb-8">LOGIN/SIGNUP</h2>
-    
-    <label className="block text-xl font-bold text-white mb-2" htmlFor="name">NAME:</label>
-    <input id="name" name="username" value={formData.username} onChange={handleChange} type="text" className="w-full mb-6 p-3 rounded-md bg-gray-200/90 focus:outline-none" />
 
-    <label className="block text-xl font-bold text-white mb-2" htmlFor="password">PASSWORD:</label>
-    <input id="password" name="password" value={formData.password} onChange={handleChange} type="password" className="w-full mb-6 p-3 rounded-md bg-gray-200/90 focus:outline-none" />
+      <form
+        onSubmit={handleSubmit}
+        className="w-[400px] p-8 mx-auto rounded-2xl border-2 border-white shadow-2xl bg-white/10 backdrop-blur-md relative"
+      >
+        <h2 className="text-3xl font-bold text-white text-center mb-8">
+          LOGIN/SIGNUP
+        </h2>
 
-    <label className="block text-xl font-bold text-white mb-2" htmlFor="college">COLLEGE NAME:</label>
-    <input id="college" type="text" value={formData.college_name} onChange={handleChange} name="college_name" className="w-full mb-8 p-3 rounded-md bg-gray-200/90 focus:outline-none" />
+        <label
+          className="block text-xl font-bold text-white mb-2"
+          htmlFor="name"
+        >
+          NAME:
+        </label>
+        <input
+          id="name"
+          name="username"
+          value={formData.username}
+          onChange={handleChange}
+          type="text"
+          className="w-full mb-6 p-3 rounded-md bg-gray-200/90 focus:outline-none"
+        />
 
-    <div className="flex justify-center">
-      <button type="submit"
-        className="px-8 py-2 rounded-md font-semibold text-white bg-gradient-to-r from-purple-500 to-cyan-500 shadow-lg border border-purple-300 hover:from-purple-600 hover:to-cyan-600 transition">
-        SIGN IN
-      </button>
-    </div>
-    {message && <div className="mt-2 text-center text-red-500">{message}</div>}
-  </form>
+        <label
+          className="block text-xl font-bold text-white mb-2"
+          htmlFor="password"
+        >
+          PASSWORD:
+        </label>
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            type={showPassword ? "text" : "password"}
+            className="w-full mb-6 p-3 rounded-md bg-gray-200/90 focus:outline-none pr-10"
+          />
+          <button
+            type="button"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600"
+            onClick={() => setShowPassword((prev) => !prev)}
+            tabIndex={-1}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
 
+        <label
+          className="block text-xl font-bold text-white mb-2"
+          htmlFor="college"
+        >
+          COLLEGE NAME:
+        </label>
+        <input
+          id="college"
+          type="text"
+          value={formData.college_name}
+          onChange={handleChange}
+          name="college_name"
+          className="w-full mb-8 p-3 rounded-md bg-gray-200/90 focus:outline-none"
+        />
 
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="px-8 py-2 rounded-md font-semibold text-white bg-gradient-to-r from-purple-500 to-cyan-500 shadow-lg border border-purple-300 hover:from-purple-600 hover:to-cyan-600 transition"
+          >
+            SIGN IN
+          </button>
+        </div>
+        {message && (
+          <div className={`mt-2 text-center text-lg font-semibold ${isSuccess ? "text-green-500" : "text-red-500"}`}>
+            {message}
+          </div>
+        )}
+      </form>
     </>
   );
 };

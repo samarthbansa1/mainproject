@@ -4,20 +4,13 @@ import Calendar from 'react-calendar';
 import "../calendar-tailwind.css";
 import 'react-calendar/dist/Calendar.css';
 
-const CalendarComp = () => {
-    const [value, onChange] = useState(new Date());
-  // Example: mark these dates
-  const markedDates = [
-    new Date(2025, 5, 24),
-    new Date(2025, 5, 25),
-  ];
+const CalendarComp = ({ value, onChange }) => (
+  <div className="w-70 h-50 mx-auto bg-transparent">
+    <Calendar 
+      value={value}
+      onChange={onChange}
+    />
+  </div>
+);
 
-  return (
-    <div className="w-70 h-50 mx-auto bg-transparent">
-  <Calendar />
-</div>
-
-  )
-}
-
-export default CalendarComp
+export default CalendarComp;
