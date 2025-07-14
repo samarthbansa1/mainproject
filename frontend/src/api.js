@@ -32,8 +32,7 @@ api.interceptors.response.use(
         const refreshToken = localStorage.getItem("refresh_token");
         // Try to refresh token
         const response = await axios.post(
-          "https://algojudgemyproject.duckdns.org/api/auth/refresh/", //uncomment when in production
-          // "http://127.0.0.1:8000/api/auth/refresh/", // remove when in production
+          "https://algojudgemyproject.duckdns.org/api/auth/refresh/", 
           
           { refresh: refreshToken }
         );

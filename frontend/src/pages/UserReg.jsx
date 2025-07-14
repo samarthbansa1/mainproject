@@ -36,8 +36,7 @@ const UserReg = () => {
     setIsSuccess(false);
     try {
       const response = await axios.post(
-        "https://algojudgemyproject.duckdns.org/api/auth/reg/", //uncomment when in production
-        // "http://127.0.0.1:8000/api/auth/reg/", //remove when in production
+        "https://algojudgemyproject.duckdns.org/api/auth/reg/", 
         formData
       );
       if (response.status === 201 || response.status === 200) {

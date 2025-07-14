@@ -24,8 +24,7 @@ const UserSignin = () => {
     try {
       //code
       const response = await axios.post(
-        // "https://algojudgemyproject.duckdns.org/api/auth/login/",//actual domain when hosting
-        "http://127.0.0.1:8000/api/auth/login/",//remove when production
+        "https://algojudgemyproject.duckdns.org/api/auth/login/",
         formData
       );
       // console.log(response);
