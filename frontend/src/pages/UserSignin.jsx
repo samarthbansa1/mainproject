@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const UserSignin = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+      const access = localStorage.getItem("access_token");
+      const refresh = localStorage.getItem("refresh_token");
+      if (access || refresh) {
+        navigate("/profile");
+      }
+    }, [navigate]);
 
   // State for password visibility
   const [showPassword, setShowPassword] = useState(false);
