@@ -80,16 +80,29 @@ class ProfileView(APIView):
             # Get solved problem IDs
             solved_problems = user_extension.solved_problems.all()
             solved_problem_ids = [problem.id for problem in solved_problems]
+            # Count problems by difficulty
+            difficulty_counts = {
+                "easy": solved_problems.filter(difficulty="easy").count(),
+                "medium": solved_problems.filter(difficulty="medium").count(),
+                "hard": solved_problems.filter(difficulty="hard").count(),
+            }
         except Exception:
             college_name = None
             solved_problem_ids = []
+            difficulty_counts = {
+                "easy": 0,
+                "medium": 0,
+                "hard": 0,
+            }
 
         return Response({
             "validated": True,
             "username": user.username,
             "college_name": college_name,
-            "solved_problem_ids": solved_problem_ids
+            "solved_problem_ids": solved_problem_ids,
+            "difficulty_category": difficulty_counts,
         }, status=status.HTTP_200_OK)
+
 
 
 
@@ -154,13 +167,15 @@ class LogoutAPIView(APIView):
         
 
 
+from django.db.models import Count
+
 class LeaderboardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         users = User.objects.annotate(
-            solved_questions_count=Count('extension__solved_questions')
-        ).order_by('-solved_questions_count')
+            solved_problems_count=Count('extension__solved_problems')
+        ).order_by('-solved_problems_count')
 
         serializer = LeaderboardUserSerializer(users, many=True)
         return Response(serializer.data)

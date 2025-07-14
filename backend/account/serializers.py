@@ -45,9 +45,9 @@ class ProblemSerializer(serializers.ModelSerializer):
 
 
 class LeaderboardUserSerializer(serializers.ModelSerializer):
-    solved_questions_count = serializers.IntegerField()
+    solved_problems_count = serializers.IntegerField()
     college_name = serializers.CharField(source='extension.college_name')
 
     class Meta:
         model = User
-        fields = ['username', 'college_name', 'solved_questions_count']
+        fields = ['username', 'college_name', 'solved_problems_count']
