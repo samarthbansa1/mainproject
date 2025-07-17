@@ -119,8 +119,8 @@ const Landingpage = () => {
       </div>
       <div className="h-[100vh] w-[100vw] flex relative ">
         {/* colour div */}
-        <div className="h-[200px] w-[10rem] absolute -z-10 top-[29%] left-[65%] rounded-2xl shadow-[0_0_1500px_30px_#951ec0]"></div>
-        <div className="h-0 w-[0rem] absolute -z-10 top-[50%] left-[80%] rounded-2xl shadow-[0_0_1500px_120px_#12A8F9]"></div>
+        <div className="h-[200px] w-[10rem] absolute -z-10 top-[29%] left-[70%] rounded-2xl shadow-[0_0_1500px_30px_#951ec0]"></div>
+        <div className="h-0 w-[0rem] absolute -z-10 top-[50%] left-[85%] rounded-2xl shadow-[0_0_1500px_120px_#12A8F9]"></div>
         {/* colour div end */}
         <div className="h-full w-[50%] flex flex-col justify-center items-center ">
           <div className="w-[80%] h-[60%] p-[2px] rounded-xl bg-gradient-to-br from-purple-500 via-purple-300 to-blue-900">
@@ -198,7 +198,7 @@ const Landingpage = () => {
           </div>
         </div>
         <div className="h-full flex justify-center items-center w-[50%] ">
-          <img className="w-[300px] rounded-[50px]" src="profilepic.png" />
+          <img className="w-[350px] rounded-[50px]" src="profilepic.png" />
         </div>
       </div>
     </>
