@@ -97,7 +97,7 @@ const ProfilePage = () => {
           <div className="h-[50%] w-1/2 border-1 rounded-md border-amber-50 overflow-auto">
             <CalendarComp value={calendarDate} onChange={setCalendarDate} />
           </div>
-          <div className="h-[50%] w-full ">
+          <div className="h-[50%] border-2 border-amber-50 overflow-auto w-full ">
             <StreakComp />
           </div>
           <LogoutButton />
