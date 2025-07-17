@@ -7,13 +7,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 const UserReg = () => {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const access = localStorage.getItem("access_token");
-    const refresh = localStorage.getItem("refresh_token");
-    if (access || refresh) {
-      navigate("/profile");
-    }
-  }, [navigate]);
+  
 
   const [formData, setFormData] = useState({
     username: "",
