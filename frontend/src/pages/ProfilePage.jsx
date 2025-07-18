@@ -18,7 +18,6 @@ const ProfilePage = () => {
   const [solvedProblems, setSolvedProblems] = useState([]);
   const [calendarDate, setCalendarDate] = useState(new Date());
 
-
   useEffect(() => {
     const fetchProfileAndProblems = async () => {
       try {
@@ -32,12 +31,14 @@ const ProfilePage = () => {
 
         // Map solved IDs to problem objects
         const solvedIds = profileRes.data.solved_problem_ids || [];
-        const solved = problemsRes.data.problems.filter(p =>
+        const solved = problemsRes.data.problems.filter((p) =>
           solvedIds.includes(p.id)
         );
         setSolvedProblems(solved);
       } catch (err) {
-        setError("Failed to fetch user profile or problems. Please login again.");
+        setError(
+          "Failed to fetch user profile or problems. Please login again."
+        );
         navigate("/signin");
       } finally {
         setLoading(false);
@@ -71,18 +72,24 @@ const ProfilePage = () => {
             </div>
             <div className="problemsdiv w-full h-[80%] overflow-auto flex flex-col gap-2">
               {solvedProblems.length === 0 ? (
-                <div className="text-gray-400 px-4">No solved problems yet.</div>
+                <div className="text-gray-400 px-4">
+                  No solved problems yet.
+                </div>
               ) : (
-                solvedProblems.map(problem => (
-                  <div key={problem.id} className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2">
+                solvedProblems.map((problem) => (
+                  <div
+                    key={problem.id}
+                    className="flex items-center gap-2 bg-gray-800 rounded px-3 py-2"
+                  >
                     <SiTicktick size={20} color="#32CD32" />
                     <h2 className="text-white text-base">
                       {problem.problem_statement
-                        .split(' ')
+                        .split(" ")
                         .slice(0, 5)
-                        .join(' ')
-                      }
-                      {problem.problem_statement.split(' ').length > 5 ? '...' : ''}
+                        .join(" ")}
+                      {problem.problem_statement.split(" ").length > 5
+                        ? "..."
+                        : ""}
                     </h2>
                   </div>
                 ))
@@ -97,7 +104,8 @@ const ProfilePage = () => {
           <div className="h-[50%] w-1/2 border-1 rounded-md border-amber-50 overflow-auto">
             <CalendarComp value={calendarDate} onChange={setCalendarDate} />
           </div>
-          <div className="h-[50%] border-2 flex justify-center items-center border-amber-50 overflow-auto w-full ">
+          <div className="h-[50%] border-1 rounded-2xl flex flex-col justify-center items-center border-amber-50 overflow-auto w-full ">
+            <h1 className="text-white font-cascadia text-2xl font-bold">Coding activity</h1>
             <StreakComp />
           </div>
           <LogoutButton />
