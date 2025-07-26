@@ -59,5 +59,4 @@ A full-stack web platform for practicing coding problems with secure code execut
 
 ---
 
-## 📁 Folder Structure Overview
 
